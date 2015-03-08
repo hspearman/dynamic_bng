@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>BandBot</title>
+
+        {% load staticfiles %}
+
+        <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}">
+
+        <link rel="stylesheet" href="{% static 'libs/font-awesome-4.3.0/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'libs/custom/css/custom.css' %}">
+    </head>
+
+    <body>
+        <!--TODO: Correct links-->
+        <!--Ember-->
+        <script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"></script>
+        <script src="{% static 'libs/handlebars/handlebars-v1.3.0.js' %}"></script>
+        <script src="{% static 'libs/ember/ember.js' %}"></script>
+        <script src="{% static 'libs/ember/ember-data.js' %}"></script>
+        <script src="{% static 'application.js' %}"></script>
+        <script src="{% static 'router.js' %}"></script>
+        <script src="{% static 'models/band.js' %}"></script>
+        <script src="{% static 'controllers/home_controller.js' %}"></script>
+        <!--Bootstrap-->
+        <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+
+        <!--Nav-bar-->
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+
+                    <!--Logo, Title, and Subtitle-->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">BandBot</a>
+                        <small class="navbar-text">The Dynamic Band Name Generator</small>
+                    </div>
+
+                    <!--Tabs-->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="#/about">About</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </header>
+
+        <div id="app">
+            <script type="text/x-handlebars">
+            {% verbatim %}
+                {{outlet}}
+            {% endverbatim %}
+            </script>
+        </div>
+
+        <!--TODO: Get plugin to separate into files-->
+        <script type="text/x-handlebars" data-template-name="home">
+        {% verbatim %}
+            <div class="container-fluid">
+
+                <!--Header-->
+                <div class="page-header text-center text-primary">
+                    <h3>Your band name is ...</h3>
+                </div>
+
+                <!-- Content -->
+                <form>
+                    <!--Loading-->
+                    {{#if isAuthorizedAndLoading}}
+                        <div class="col-sm-12 text-center loading-top">
+                            <p>Loading</p>
+                        </div>
+                        <div class="col-sm-12 text-center loading-bottom">
+                            <i class="fa fa-cog fa-2x spinning"></i>
+                        </div>
+                    {{else}}
+                        <!--Output-->
+                        <div class="col-sm-4 col-sm-offset-4 text-center">
+                            <!--<h1>Lorem Ipsum Dolor</h1>-->
+                            <h1>{{model.band.name}}</h1>
+                        </div>
+
+                        <!--Example usage-->
+                        <div class="form-group col-sm-6 col-sm-offset-3 text-center text-primary">
+                            <blockquote>
+                                <p>{{formatQuote}}</p>
+                                <footer>{{model.band.quote_source}}</footer>
+                            </blockquote>
+                        </div>
+
+                        <div class="form-group col-sm-4 col-sm-offset-4 text-center">
+                            <!--Help text-->
+                            <div class="col-sm-12 form-group">
+                                {{#if model.isAuthorized}}
+                                    <p class="text-success">Thanks for logging in, enjoy BandBot!</p>
+                                {{else}}
+                                    <p class="text-success">Want personalized results?
+                                        <a href="#" class="btn-success btn btn-xs"{{action 'authorize'}}>
+                                            Login to Spotify
+                                        </a>
+                                    </p>
+                                {{/if}}
+                            </div>
+                            <!--Generate button-->
+                            <div class="form-group col-sm-12">
+                                {{#if isLoadingBand}}
+                                    <button disabled {{bind-attr class=":btn :btn-lg model.isAuthorized:btn-success:btn-primary"}}>Loading ...</button>
+                                {{else}}
+                                    <button {{action 'generateBandName'}} {{bind-attr class=":btn :btn-lg model.isAuthorized:btn-success:btn-primary"}}>Generate</button>
+                                {{/if}}
+                            </div>
+                        </div>    
+                    {{/if}}
+                </form>
+
+            </div> 
+        {% endverbatim %}
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="about">
+            {% verbatim %}
+                <div class="container-fluid">
+
+                    <!--Header-->
+                    <div class="page-header text-center text-primary">
+                      <h3>About BandBot</h3>
+                    </div>
+
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <p>
+                            Lorem ipsum dolor sit amet, cu semper torquatos duo, id dolore laudem eirmod eum. Ad pro epicurei reprehendunt. Enim solet oporteat cum ex, justo maluisset laboramus te vis. In soleat appetere sententiae nec, est prima affert in.
+                        </p>
+                        <p>
+                            Justo quidam fuisset eam ea, illud vitae dolore at cum. Duo an dolorem maiorum aliquando, etiam quaerendum pro ad, nec aeque quaeque cu. Probatus facilisis pro cu. Et his natum fugit splendide.
+                        </p>
+                        <p>
+                            Eos ullum causae dissentias eu, te nec erant principes. Cum putant delicata an, ex liber alterum reprehendunt ius. Omnesque temporibus an cum. Nullam everti doctus per ne. Tibique explicari salutatus eu sea, ad vix eleifend consectetuer.
+                        </p>
+                        <p>
+                            Pro ut nostrud alienum, ius no placerat gloriatur. Delenit luptatum ei vim, labitur mentitum dignissim per no. Harum pertinacia deterruisset an mel. Cum audire vivendo te, ponderum elaboraret intellegebat cu vel.
+                        </p>
+                    </div>
+                    
+                </div>
+            {% endverbatim %}
+        </script>
+
+        <footer>
+
+            <div class="col-sm-12 text-center">
+                <hr>
+                <small class="text-muted">Created by Hannah Spearman</small>
+            </div>
+        </footer>
+
+    </body>
+
+</html>
+
